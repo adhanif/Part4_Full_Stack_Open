@@ -13,7 +13,7 @@ const allBlogs = async (req, res, next) => {
 const newBlog = async (req, res, next) => {
   try {
     const person = req.body;
-
+    console.log(person);
     const blogs = await Blog.create(person);
     res.status(201).json(person);
   } catch (error) {
