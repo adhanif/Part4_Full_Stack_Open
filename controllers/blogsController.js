@@ -1,9 +1,27 @@
+const { response } = require("express");
+const Blog = require("../models/blogsSchema");
+
 const allBlogs = async (req, res, next) => {
   try {
-    res.send("it is working");
-  } catch (error) {}
+    const blogs = await Blog.find({});
+    res.status(200).json(blogs);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const newBlog = async (req, res, next) => {
+  try {
+    const person = req.body;
+
+    const blogs = await Blog.create(person);
+    res.status(201).json(person);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
   allBlogs,
+  newBlog,
 };
