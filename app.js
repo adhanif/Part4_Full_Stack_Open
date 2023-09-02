@@ -1,5 +1,5 @@
 const express = require("express");
-require("./utils/mongoDB");
+require("./mongoDB");
 const middleware = require("./utils/middleware");
 const cors = require("cors");
 const app = express();

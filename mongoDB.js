@@ -1,12 +1,14 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const logger = require("./logger");
+const logger = require("./utils/logger");
+
+mongoose.set("strictQuery", false);
 
 mongoose
   .connect(process.env.CONNECTION_STRING)
   .then(() => {
     logger.info("Connected to the database");
   })
-  .catch((err) => {
-    logger.error("Lost connection to the database", err);
+  .catch((error) => {
+    logger.error("Lost connection to the database", error.message);
   });
