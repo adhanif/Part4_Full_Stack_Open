@@ -14,6 +14,7 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = (blogs) => {
   let highestLikeCount;
+
   blogs.forEach((element) => {
     if (!highestLikeCount) {
       highestLikeCount = element;
@@ -21,6 +22,7 @@ const favoriteBlog = (blogs) => {
       highestLikeCount = element;
     }
   });
+
   const outputObject = {
     title: highestLikeCount.title,
     author: highestLikeCount.author,
@@ -30,8 +32,36 @@ const favoriteBlog = (blogs) => {
   return outputObject;
 };
 
+const mostBlogs = (blogs) => {
+  let mostAuthor = {};
+
+  blogs.forEach((blog) => {
+    if (mostAuthor[blog.author]) {
+      mostAuthor[blog.author]++;
+    } else {
+      mostAuthor[blog.author] = 1;
+    }
+  });
+
+  let maxKey = "";
+  let maxValue = null;
+
+  for (const key in mostAuthor) {
+    if (maxValue === null || mostAuthor[key] > maxValue) {
+      maxKey = key;
+      maxValue = mostAuthor[key];
+    }
+  }
+
+  return {
+    author: `${maxKey}`,
+    blogs: maxValue,
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
