@@ -25,6 +25,17 @@ test("correct amount of blogs are returened as json", async () => {
   expect(response.body).toHaveLength(helper.intialBlogs.length);
 });
 
+test("blog post has id property and does not have _id property", async () => {
+  const response = await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  const blog = response.body[0];
+  expect(blog.id).toBeDefined();
+  expect(blog._id).toBeUndefined();
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
