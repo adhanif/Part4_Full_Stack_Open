@@ -58,6 +58,22 @@ test("new blog and total blogs increased by one and correctly saved content", as
   expect(titles).toContain("Announcing TypeScript 5.2");
 });
 
+test("if the likes property is missing from the request", async () => {
+  const newBlog = {
+    title: "Announcing TypeScript 5.2",
+    author: "Daniel Rosenwasser",
+    url: "https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/",
+  };
+
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  expect(response.body.likes).toBe(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
