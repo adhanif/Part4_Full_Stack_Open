@@ -28,14 +28,36 @@ const newBlog = async (req, res, next) => {
   }
 };
 
-const deleteBlog = async (req, res) => {
-  const { id } = req.params;
-  await Blog.findByIdAndDelete({ _id: id });
-  res.status(204).end();
+const deleteBlog = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Blog.findByIdAndDelete({ _id: id });
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateBlog = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { likes } = req.body;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      { $set: { likes } },
+      { new: true }
+    );
+
+    res.status(200).json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
   allBlogs,
   newBlog,
   deleteBlog,
+  updateBlog,
 };

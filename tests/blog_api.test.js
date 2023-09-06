@@ -103,6 +103,23 @@ describe("deletion of a blog", () => {
   });
 });
 
+describe("update of a blog", () => {
+  test("succeeds with status code 200 after update", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+
+    const likes = { likes: 10 };
+
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(likes)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    expect(response.body.likes).toBe(10);
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
