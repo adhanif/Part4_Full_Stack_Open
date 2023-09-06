@@ -28,7 +28,14 @@ const newBlog = async (req, res, next) => {
   }
 };
 
+const deleteBlog = async (req, res) => {
+  const { id } = req.params;
+  await Blog.findByIdAndDelete({ _id: id });
+  res.status(204).end();
+};
+
 module.exports = {
   allBlogs,
   newBlog,
+  deleteBlog,
 };
