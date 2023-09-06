@@ -12,6 +12,14 @@ const allBlogs = async (req, res, next) => {
 
 const newBlog = async (req, res, next) => {
   const { title, author, url, likes = 0 } = req.body;
+
+  if (!title && !url) {
+    return res.status(400).json({ error: " Title and URL are required" });
+  } else if (!url) {
+    return res.status(400).json({ error: "Url is required" });
+  } else if (!title) {
+    return res.status(400).json({ error: "Title is required" });
+  }
   try {
     const blogs = await Blog.create({ title, author, url, likes });
     res.status(201).json(blogs);

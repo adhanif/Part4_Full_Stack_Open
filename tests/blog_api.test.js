@@ -74,6 +74,14 @@ test("if the likes property is missing from the request", async () => {
   expect(response.body.likes).toBe(0);
 });
 
+test("title or url properties are missing then status code 400 Bad Request", async () => {
+  const newBlog = {
+    author: "Daniel Rosenwasser",
+  };
+
+   await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
