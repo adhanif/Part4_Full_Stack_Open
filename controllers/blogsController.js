@@ -1,4 +1,4 @@
-const { response } = require("express");
+// const { response } = require("express");
 const Blog = require("../models/blogsSchema");
 
 const allBlogs = async (req, res, next) => {
@@ -12,10 +12,8 @@ const allBlogs = async (req, res, next) => {
 
 const newBlog = async (req, res, next) => {
   try {
-    const person = req.body;
-    console.log(person);
-    const blogs = await Blog.create(person);
-    res.status(201).json(person);
+    const blogs = await Blog.create(req.body);
+    res.status(201).json(blogs);
   } catch (error) {
     next(error);
   }
