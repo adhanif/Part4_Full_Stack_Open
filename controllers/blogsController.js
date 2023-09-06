@@ -11,8 +11,9 @@ const allBlogs = async (req, res, next) => {
 };
 
 const newBlog = async (req, res, next) => {
+  const { title, author, url, likes = 0 } = req.body;
   try {
-    const blogs = await Blog.create(req.body);
+    const blogs = await Blog.create({ title, author, url, likes });
     res.status(201).json(blogs);
   } catch (error) {
     next(error);
