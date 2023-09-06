@@ -1,6 +1,6 @@
 const Blog = require("../models/blogsSchema");
 
-const intialBlogs = [
+const initialBlogs = [
   {
     title: "React patterns",
     author: "Michael Chan",
@@ -21,4 +21,12 @@ const intialBlogs = [
   },
 ];
 
-module.exports = { intialBlogs };
+const blogsInDb = async () => {
+  try {
+    const blogs = await Blog.find({});
+    return blogs.map((blog) => blog.toJSON());
+  } catch (error) {
+    console.log(error);
+  }
+};
+module.exports = { initialBlogs, blogsInDb };
