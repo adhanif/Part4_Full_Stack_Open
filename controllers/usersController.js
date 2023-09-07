@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const allUsers = async (req, res) => {
   try {
     // const { username, name } = req.body;
-    const users = await User.find({});
+    const users = await User.find({}).populate("blogs");
     res.status(201).json(users);
   } catch (error) {
     next(error);
