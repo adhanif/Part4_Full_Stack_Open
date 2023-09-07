@@ -16,7 +16,7 @@ const createUser = async (req, res, next) => {
     const { username, name, password } = req.body;
     const alreadyUser = await User.find({ username });
 
-    if (alreadyUser) {
+    if (alreadyUser.length > 0) {
       return res
         .status(400)
         .json({ error: "expected `username` to be unique" });
