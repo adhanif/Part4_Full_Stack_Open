@@ -4,7 +4,10 @@ const User = require("../models/userSchema");
 
 const allBlogs = async (req, res, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
     res.status(200).json(blogs);
   } catch (error) {
     next(error);
@@ -23,18 +26,20 @@ const newBlog = async (req, res, next) => {
       return res.status(400).json({ error: "Title is required" });
     }
 
-    const user = await User.findById(req.body.user);
+    // const user = await User.findById(req.body.user);
+
+    const anyUser = await User.findOne();
 
     const newblog = await Blog.create({
       title,
       author,
       url,
       likes,
-      user: user.id,
+      user: anyUser.id,
     });
 
-    user.blogs = user.blogs.concat(newblog._id);
-    await user.save();
+    anyUser.blogs = anyUser.blogs.concat(newblog._id);
+    await anyUser.save();
     res.status(201).json(newblog);
   } catch (error) {
     next(error);
