@@ -14,6 +14,14 @@ const allUsers = async (req, res) => {
 const createUser = async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
+    const alreadyUser = await User.find({ username });
+
+    if (alreadyUser) {
+      return res
+        .status(400)
+        .json({ error: "expected `username` to be unique" });
+    }
+
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     const newUser = await User.create({ username, name, passwordHash });
