@@ -1,5 +1,6 @@
 // const { response } = require("express");
 const Blog = require("../models/blogsSchema");
+const User = require("../models/userSchema");
 
 const allBlogs = async (req, res, next) => {
   try {
@@ -11,18 +12,30 @@ const allBlogs = async (req, res, next) => {
 };
 
 const newBlog = async (req, res, next) => {
-  const { title, author, url, likes = 0 } = req.body;
-
-  if (!title && !url) {
-    return res.status(400).json({ error: " Title and URL are required" });
-  } else if (!url) {
-    return res.status(400).json({ error: "Url is required" });
-  } else if (!title) {
-    return res.status(400).json({ error: "Title is required" });
-  }
   try {
-    const blogs = await Blog.create({ title, author, url, likes });
-    res.status(201).json(blogs);
+    const { title, author, url, likes = 0 } = req.body;
+
+    if (!title && !url) {
+      return res.status(400).json({ error: " Title and URL are required" });
+    } else if (!url) {
+      return res.status(400).json({ error: "Url is required" });
+    } else if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    const user = await User.findById(req.body.user);
+
+    const newblog = await Blog.create({
+      title,
+      author,
+      url,
+      likes,
+      user: user.id,
+    });
+
+    user.blogs = user.blogs.concat(newblog._id);
+    await user.save();
+    res.status(201).json(newblog);
   } catch (error) {
     next(error);
   }
