@@ -17,7 +17,7 @@ const allBlogs = async (req, res, next) => {
 const newBlog = async (req, res, next) => {
   try {
     const { title, author, url, likes = 0 } = req.body;
-    const { decodedToken } = req;
+    const { user } = req;
 
     if (!title && !url) {
       return res.status(400).json({ error: " Title and URL are required" });
@@ -27,7 +27,7 @@ const newBlog = async (req, res, next) => {
       return res.status(400).json({ error: "Title is required" });
     }
 
-    const creater = await User.findById(decodedToken.id);
+    const creater = await User.findById(user.id);
 
     const newblog = await Blog.create({
       title,
@@ -47,8 +47,23 @@ const newBlog = async (req, res, next) => {
 
 const deleteBlog = async (req, res, next) => {
   try {
+    const { user } = req;
     const { id } = req.params;
-    await Blog.findByIdAndDelete({ _id: id });
+    const blog = await Blog.findById({ _id: id });
+
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    if (blog.user.toString() !== user.id) {
+      return res.status(403).json({ error: "Permission denied" });
+    }
+
+    await Blog.findByIdAndDelete(id);
     res.status(204).end();
   } catch (error) {
     next(error);

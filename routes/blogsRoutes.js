@@ -11,7 +11,7 @@ const {
 
 blogsRouter.get("/", allBlogs);
 blogsRouter.post("/", verifyToken, newBlog);
-blogsRouter.delete("/:id", deleteBlog);
+blogsRouter.delete("/:id", verifyToken, deleteBlog);
 blogsRouter.put("/:id", updateBlog);
 
 module.exports = {
