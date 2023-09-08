@@ -1,5 +1,6 @@
 const express = require("express");
 const blogsRouter = express.Router();
+const verifyToken = require("../utils/verifyToken");
 
 const {
   allBlogs,
@@ -9,7 +10,7 @@ const {
 } = require("../controllers/blogsController");
 
 blogsRouter.get("/", allBlogs);
-blogsRouter.post("/", newBlog);
+blogsRouter.post("/", verifyToken, newBlog);
 blogsRouter.delete("/:id", deleteBlog);
 blogsRouter.put("/:id", updateBlog);
 
