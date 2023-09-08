@@ -7,7 +7,6 @@ const verifyToken = async (req, res, next) => {
     if (authorization && authorization.startsWith("Bearer ")) {
       authorization = authorization.replace("Bearer ", "");
     }
-
     const decodedToken = jwt.verify(authorization, process.env.JWT_SECRET);
 
     if (!decodedToken.id) {
