@@ -17,6 +17,7 @@ const allBlogs = async (req, res, next) => {
 const newBlog = async (req, res, next) => {
   try {
     const { title, author, url, likes = 0 } = req.body;
+    const { decodedToken } = req;
 
     if (!title && !url) {
       return res.status(400).json({ error: " Title and URL are required" });
@@ -26,20 +27,18 @@ const newBlog = async (req, res, next) => {
       return res.status(400).json({ error: "Title is required" });
     }
 
-    // const user = await User.findById(req.body.user);
-
-    const anyUser = await User.findOne();
+    const creater = await User.findById(decodedToken.id);
 
     const newblog = await Blog.create({
       title,
       author,
       url,
       likes,
-      user: anyUser.id,
+      user: creater.id,
     });
 
-    anyUser.blogs = anyUser.blogs.concat(newblog._id);
-    await anyUser.save();
+    creater.blogs = creater.blogs.concat(newblog._id);
+    await creater.save();
     res.status(201).json(newblog);
   } catch (error) {
     next(error);
