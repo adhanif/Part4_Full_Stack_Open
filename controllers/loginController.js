@@ -6,7 +6,7 @@ const User = require("../models/userSchema");
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const matchUser = await User.findOne({ username }).select("+password");
+    const matchUser = await User.findOne({ username });
     const passwordCorrect =
       matchUser === null
         ? false

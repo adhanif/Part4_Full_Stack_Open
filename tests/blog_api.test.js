@@ -40,29 +40,6 @@ describe("blog post has id property", () => {
   });
 });
 
-describe("addition of a new blog", () => {
-  test("new blog and total blogs increased by one and correctly saved content", async () => {
-    const newBlog = {
-      title: "Announcing TypeScript 5.2",
-      author: "Daniel Rosenwasser",
-      url: "https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/",
-      likes: 9,
-    };
-
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
-
-    const titles = blogsAtEnd.map((blog) => blog.title);
-    expect(titles).toContain("Announcing TypeScript 5.2");
-  });
-});
-
 describe("missing likes set to zero", () => {
   test("if the likes property is missing from the request", async () => {
     const newBlog = {
@@ -117,6 +94,57 @@ describe("update of a blog", () => {
       .expect("Content-Type", /application\/json/);
 
     expect(response.body.likes).toBe(10);
+  });
+});
+
+describe("addition of a new blog", () => {
+  let token;
+
+  beforeAll(async () => {
+    const loginCredentials = {
+      username: "mluukkai",
+      password: "salainen",
+    };
+
+    const response = await api
+      .post("/api/login")
+      .send(loginCredentials)
+      .expect(200);
+
+    token = response.body.token;
+  });
+  test("new blog and total blogs increased by one and correctly saved content", async () => {
+    const newBlog = {
+      title: "Announcing TypeScript 5.2",
+      author: "Daniel Rosenwasser",
+      url: "https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/",
+      likes: 9,
+    };
+
+    console.log(token);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).toContain("Announcing TypeScript 5.2");
+  });
+
+  test("adding a blog without a token should fail with status code 401 Unauthorized", async () => {
+    const newBlog = {
+      title: "New Blog Without Token",
+      author: "me",
+      url: "https://example.com",
+      likes: 5,
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(401);
   });
 });
 
