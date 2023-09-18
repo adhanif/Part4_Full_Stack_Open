@@ -9,10 +9,10 @@ const verifyToken = async (req, res, next) => {
     }
 
     if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-      authorization = authorization.replace("bearer ", "");
+      authorization1 = authorization.replace("bearer ", "");
     }
 
-    const decodedToken = jwt.verify(authorization, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(authorization1, process.env.JWT_SECRET);
 
     if (!decodedToken.id) {
       return res.status(401).json({ error: "token invalid" });

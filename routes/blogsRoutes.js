@@ -12,7 +12,7 @@ const {
 blogsRouter.get("/", allBlogs);
 blogsRouter.post("/", verifyToken, newBlog);
 blogsRouter.delete("/:id", verifyToken, deleteBlog);
-blogsRouter.put("/:id", updateBlog);
+blogsRouter.put("/:id", verifyToken, updateBlog);
 
 module.exports = {
   blogsRouter,

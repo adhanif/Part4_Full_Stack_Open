@@ -6,7 +6,9 @@ const User = require("../models/userSchema");
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const matchUser = await User.findOne({ username });
+
+    const matchUser = await User.findOne({ username }).populate("blogs");
+   
     const passwordCorrect =
       matchUser === null
         ? false
@@ -27,9 +29,13 @@ const login = async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET);
-    res
-      .status(200)
-      .send({ token, username: matchUser.username, id: matchUser._id });
+    res.status(200).send({
+      token,
+      username: matchUser.username,
+      name: matchUser.name,
+      id: matchUser._id,
+      blogs: matchUser.blogs,
+    });
   } catch (error) {
     next(error);
   }

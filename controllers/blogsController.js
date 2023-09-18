@@ -50,7 +50,7 @@ const deleteBlog = async (req, res, next) => {
     const { user } = req;
     const { id } = req.params;
     const blog = await Blog.findById({ _id: id });
-
+    // console.log(blog);
     if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
@@ -74,7 +74,6 @@ const updateBlog = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { likes } = req.body;
-
     const updatedBlog = await Blog.findByIdAndUpdate(
       id,
       { $set: { likes } },
